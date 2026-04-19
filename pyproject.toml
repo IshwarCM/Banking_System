@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Banking_System"
+version = "1.0.0"
+description = "Banking System"
+readme = "README.md"
+requires-python = ">=3.8"
+
+authors = [
+    { name = "IshwarMullur", email = "ishwarcmullur888@gmail.com" }
+]
+
+# Production dependencies
+dependencies = [
+    "faker>=13.3.4"
+]
+
+# Development dependencies
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.2.0",
+    "pytest-cov>=3.0.0",
+    "black>=23.3.0",
+    "isort>=5.10.1",
+    "sphinx>=5.0.0",
+    "pytest-html>=3.1.1"
+]
+
+# Black configuration
+[tool.black]
+line-length = 88
+target-version = ["py38"]
