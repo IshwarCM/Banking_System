@@ -17,7 +17,9 @@ from src.stores.customer_store import CustomerStore
 from src.stores.account_store import AccountStore
 from src.stores.transaction_store import TransactionStore
 from src.utils.menu import Menu
+from configuration.logger_configuration import setup_logger
 
+logger = setup_logger("app.log")
 
 def print_main_menu():
     print("\n==== ABC BANKING SYSTEM ====")
@@ -67,8 +69,9 @@ def main():
                     customer = Corporate(
                         name, address, contact, email, password, company_type
                     )
-
+                logger.info(f"Attempting to register customer {customer.get_name()} with email {customer.get_email()}")
                 menu.register_customer(customer)
+                logger.info(f"Customer {customer.get_name()} registered successfully")
                 print("✅ Customer registered successfully")
 
             # ---------------- LOGIN ---------------- #
@@ -76,8 +79,10 @@ def main():
                 email = input("Email: ")
                 password = input("Password: ")
                 if menu.login(email, password):
+                    logger.info(f"Customer {email} logged in successfully")
                     print("✅ Login successful")
                 else:
+                    logger.warning(f"Login failed for customer with email {email}")
                     print("❌ Invalid credentials")
 
             # ---------------- OPEN ACCOUNT ---------------- #
@@ -93,6 +98,7 @@ def main():
                     account = CurrentAccount(acc_no, datetime.now(), limit)
 
                 menu.open_account(account)
+                logger.info(f"Account opened for customer {menu.get_logged_in_customer().get_name()}")
                 print("✅ Account opened")
 
             # ---------------- DEPOSIT ---------------- #
@@ -100,7 +106,9 @@ def main():
                 acc_no = input("Account Number: ")
                 amt = float(input("Amount: "))
                 account = account_store.find_by_account_number(acc_no)
+                logger.info(f"Attempting to deposit {amt} into account {acc_no}")
                 menu.deposit(account, amt)
+                logger.info(f"Deposit successful for account {acc_no}")
                 print("✅ Deposit successful")
 
             # ---------------- WITHDRAW ---------------- #
@@ -108,7 +116,9 @@ def main():
                 acc_no = input("Account Number: ")
                 amt = float(input("Amount: "))
                 account = account_store.find_by_account_number(acc_no)
+                logger.info(f"Attempting to withdraw {amt} from account {acc_no}")
                 menu.withdraw(account, amt)
+                logger.info(f"Withdrawal successful for account {acc_no}")
                 print("✅ Withdrawal successful")
 
             # ---------------- TRANSFER ---------------- #
@@ -152,10 +162,12 @@ def main():
             # ---------------- LOGOUT ---------------- #
             elif choice == "9":
                 menu.logout()
+                logger.info(f"Customer {menu.get_logged_in_customer().get_name()} logged out")
                 print("✅ Logged out")
 
             # ---------------- EXIT ---------------- #
             elif choice == "0":
+                logger.info("Application exited")
                 print("👋 Thank you for banking with us!")
                 break
 
@@ -163,6 +175,7 @@ def main():
                 print("❌ Invalid option")
 
         except Exception as e:
+            logger.error(f"An error occurred: {e}")
             print(f"⚠ Error: {e}")
 
 

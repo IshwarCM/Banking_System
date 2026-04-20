@@ -10,6 +10,10 @@ if project_root not in sys.path:
     sys.path.append(project_root)
     
 from datetime import datetime
+from configuration.logger_configuration import setup_logger
+
+
+logger = setup_logger("transaction.log")
 
 
 class Transaction:

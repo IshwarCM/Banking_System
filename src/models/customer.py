@@ -13,7 +13,9 @@ if project_root not in sys.path:
 from datetime import date
 from typing import List
 from src.models.account import Account
+from configuration.logger_configuration import setup_logger
 
+logger = setup_logger("customer.log")
 
 class Customer:
     __total_customers = 0
@@ -30,10 +32,16 @@ class Customer:
 
     # Authentication helpers
     def check_credentials(self, email, password):
-        return self.__email == email and self.__password == password
+        result = self.__email == email and self.__password == password
+        if not result:
+            logger.warning(f"Failed login attempt for email: {email}")
+        else:
+            logger.info(f"Checking credentials for email: {email}")
+        return result
 
     # Account management
     def add_account(self, account: Account):
+        logger.info(f"Adding account with account number {account.get_account_number()} to customer {self.__name}")
         self.__accounts.append(account)
 
     def get_accounts(self):
@@ -45,12 +53,15 @@ class Customer:
 
     def set_address(self, address):
         self.__address = address
+        logger.info(f"Updated address for customer {self.__name}")
 
     def set_contact_number(self, number):
         self.__contactNumber = number
+        logger.info(f"Updated contact number for customer {self.__name}")
 
     def set_email(self, email):
         self.__email = email
+        logger.info(f"Updated email for customer {self.__name}")
 
     @classmethod
     def totalNumberOfCustomers(cls):

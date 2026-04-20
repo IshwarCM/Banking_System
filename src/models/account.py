@@ -12,7 +12,9 @@ if project_root not in sys.path:
 from datetime import datetime
 from typing import List
 from src.models.transaction import Transaction
+from configuration.logger_configuration import setup_logger
 
+logger = setup_logger("account.log")
 
 
 class Account:
@@ -38,16 +40,21 @@ class Account:
     # Business logic
     def deposit(self, amount: float):
         if amount <= 0:
+            logger.error(f"Attempted to deposit non-positive amount: {amount}")
             raise ValueError("Deposit amount must be positive")
         self.__balance += amount
+        logger.info(f"Deposited {amount:.2f} to account {self.__accountNumber}. New balance: {self.__balance:.2f}")
         self.__transactions.append(Transaction(amount, "DEPOSIT"))
 
     def withdraw(self, amount: float):
         if amount <= 0:
+            logger.error(f"Attempted to withdraw non-positive amount: {amount}")
             raise ValueError("Withdrawal amount must be positive")
         if amount > self.__balance:
+            logger.error(f"Attempted to withdraw amount {amount} which exceeds balance {self.__balance}")
             raise ValueError("Insufficient funds")
         self.__balance -= amount
+        logger.info(f"Withdrew {amount:.2f} from account {self.__accountNumber}. New balance: {self.__balance:.2f}")
         self.__transactions.append(Transaction(amount, "WITHDRAW"))
 
 
